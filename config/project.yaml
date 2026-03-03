@@ -1,0 +1,6 @@
+project_id: "YOUR_PROJECT_ID"
+region: "us-central1"
+bq_dataset: "healthcare_ml"
+artifact_bucket: "YOUR_BUCKET"
+pipeline_root: "gs://YOUR_BUCKET/pipeline-root"
+vertex_endpoint_display_name: "readmission-risk-endpoint"

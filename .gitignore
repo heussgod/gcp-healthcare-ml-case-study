@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+model/
+pipeline_spec.json
+monitoring/
+*.egg-info/
+data/raw/claims_events.csv

@@ -1,0 +1,26 @@
+steps:
+- name: 'python:3.11'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    pip install -r requirements.txt
+    pip install -e .
+    python -m healthcare_ml.data.generate_synthetic --rows 12000 --output data/raw/claims_events.csv
+    python -m healthcare_ml.data.load_to_bigquery --project-id ${PROJECT_ID} --dataset-id ${_BQ_DATASET} --table-id claims_events --csv-path data/raw/claims_events.csv --location ${_REGION} --replace
+    python -m healthcare_ml.features.build_features --project-id ${PROJECT_ID} --dataset-id ${_BQ_DATASET} --sql-path sql/build_training_features.sql --location ${_REGION}
+    python -m healthcare_ml.training.train --project-id ${PROJECT_ID} --dataset-id ${_BQ_DATASET} --table-id training_features --location ${_REGION} --model-output model/model.joblib --metrics-output model/metrics.json --model-output-gcs gs://${_GCS_BUCKET}/models/latest/model.joblib --metrics-output-gcs gs://${_GCS_BUCKET}/models/latest/metrics.json
+
+- name: 'python:3.11'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    pip install -r requirements.txt
+    pip install -e .
+    python -m healthcare_ml.pipeline.vertex_pipeline --project-id ${PROJECT_ID} --region ${_REGION} --dataset-id ${_BQ_DATASET} --pipeline-root gs://${_GCS_BUCKET}/pipeline-root --sql-path sql/build_training_features.sql --template-output pipeline_spec.json --submit
+
+substitutions:
+  _REGION: us-central1
+  _BQ_DATASET: healthcare_ml
+  _GCS_BUCKET: REPLACE_WITH_BUCKET

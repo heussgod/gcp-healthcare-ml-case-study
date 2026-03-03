@@ -1,6 +1,6 @@
 # Healthcare Readmission Risk on Google Cloud (End-to-End)
 
-This project is a healthcare ML system built on Google Cloud.
+This project is a healthcare ML system I built on Google Cloud.
 It predicts 30-day readmission risk and demonstrates Professional ML Engineer skills I learned like data prep, feature engineering, training, evaluation, deployment, serving, and monitoring.
 
 ## What This Shows

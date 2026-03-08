@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from healthcare_ml.data.generate_synthetic import generate_dataset
+from healthcare_ml.data.generate_synthetic import generate_dataset, generate_interaction_dataset
 
 
 def test_generate_dataset_shape_and_columns() -> None:
@@ -42,3 +42,12 @@ def test_split_distribution_present() -> None:
     assert set(counts.index) == {"train", "val", "test"}
     assert counts["train"] > counts["val"]
     assert counts["train"] > counts["test"]
+
+
+def test_interaction_dataset_links_back_to_encounters() -> None:
+    claims_df = generate_dataset(rows=250, seed=19)
+    interactions_df = generate_interaction_dataset(claims_df, seed=19)
+
+    assert len(interactions_df) >= len(claims_df)
+    assert set(interactions_df["encounter_id"]).issubset(set(claims_df["encounter_id"]))
+    assert {"interaction_id", "channel", "raw_text"}.issubset(interactions_df.columns)

@@ -17,6 +17,13 @@ class PatientFeatures(BaseModel):
     med_count: float = Field(ge=0)
     discharge_disposition: str
     zip_svi: float = Field(ge=0, le=1)
+    interaction_count: float = Field(default=0, ge=0)
+    avg_sentiment_score: float = Field(default=0, ge=-1, le=1)
+    urgent_symptom_mentions: float = Field(default=0, ge=0)
+    medication_barrier_flag: float = Field(default=0, ge=0, le=1)
+    followup_barrier_flag: float = Field(default=0, ge=0, le=1)
+    social_barrier_flag: float = Field(default=0, ge=0, le=1)
+    positive_recovery_flag: float = Field(default=0, ge=0, le=1)
 
 
 app = FastAPI(title="Healthcare Readmission Risk API")

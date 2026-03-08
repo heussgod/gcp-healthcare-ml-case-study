@@ -7,3 +7,7 @@ pipeline_spec.json
 monitoring/
 *.egg-info/
 data/raw/claims_events.csv
+data/raw/care_interactions.csv
+data/prepared/
+data/enriched/
+data/processed/

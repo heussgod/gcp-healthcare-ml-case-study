@@ -7,7 +7,12 @@ from pathlib import Path
 import joblib
 import pandas as pd
 
-from healthcare_ml.training.train import FEATURE_COLUMNS, build_model_pipeline, evaluate_by_split
+from healthcare_ml.training.train import (
+    FEATURE_COLUMNS,
+    build_model_pipeline,
+    ensure_feature_columns,
+    evaluate_by_split,
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -23,6 +28,7 @@ def main() -> None:
 
     df = pd.read_csv(args.input_csv)
     df = df.rename(columns={"readmit_30d": "label"})
+    df = ensure_feature_columns(df)
 
     train_df = df[df["split"] == "train"].copy()
     if train_df.empty:

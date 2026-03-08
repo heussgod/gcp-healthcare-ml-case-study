@@ -26,6 +26,13 @@ FEATURE_COLUMNS = [
     "med_count",
     "discharge_disposition",
     "zip_svi",
+    "interaction_count",
+    "avg_sentiment_score",
+    "urgent_symptom_mentions",
+    "medication_barrier_flag",
+    "followup_barrier_flag",
+    "social_barrier_flag",
+    "positive_recovery_flag",
 ]
 
 NUMERIC_FEATURES = [
@@ -36,6 +43,13 @@ NUMERIC_FEATURES = [
     "avg_length_of_stay",
     "med_count",
     "zip_svi",
+    "interaction_count",
+    "avg_sentiment_score",
+    "urgent_symptom_mentions",
+    "medication_barrier_flag",
+    "followup_barrier_flag",
+    "social_barrier_flag",
+    "positive_recovery_flag",
 ]
 
 CATEGORICAL_FEATURES = [
@@ -43,6 +57,28 @@ CATEGORICAL_FEATURES = [
     "payer_type",
     "discharge_disposition",
 ]
+
+DEFAULT_FEATURE_VALUES = {
+    "interaction_count": 0.0,
+    "avg_sentiment_score": 0.0,
+    "urgent_symptom_mentions": 0.0,
+    "medication_barrier_flag": 0.0,
+    "followup_barrier_flag": 0.0,
+    "social_barrier_flag": 0.0,
+    "positive_recovery_flag": 0.0,
+}
+
+
+def ensure_feature_columns(df: pd.DataFrame) -> pd.DataFrame:
+    prepared = df.copy()
+    for column in FEATURE_COLUMNS:
+        if column in prepared.columns:
+            continue
+
+        default_value = DEFAULT_FEATURE_VALUES.get(column, "unknown")
+        prepared[column] = default_value
+
+    return prepared
 
 
 def build_model_pipeline() -> Pipeline:
@@ -93,9 +129,10 @@ def _compute_metrics(y_true: pd.Series, y_prob: pd.Series, threshold: float = 0.
 
 def evaluate_by_split(model: Pipeline, df: pd.DataFrame) -> dict[str, dict[str, float]]:
     metrics: dict[str, dict[str, float]] = {}
+    prepared_df = ensure_feature_columns(df)
 
     for split in ["train", "val", "test"]:
-        split_df = df[df["split"] == split]
+        split_df = prepared_df[prepared_df["split"] == split]
         if split_df.empty:
             continue
         y_true = split_df["label"].astype(int)
@@ -143,6 +180,7 @@ def main() -> None:
         table_id=args.table_id,
         location=args.location,
     )
+    df = ensure_feature_columns(df)
 
     train_df = df[df["split"] == "train"].copy()
     if train_df.empty:

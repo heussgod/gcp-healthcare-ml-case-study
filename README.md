@@ -1,10 +1,12 @@
 # Healthcare Outreach Triage on Google Cloud
 
-End-to-end synthetic healthcare ML pipeline for post-discharge outreach triage, covering text preparation, feature engineering, model training, Vertex AI deployment, Cloud Run serving, and drift reporting.
+Production-style healthcare ML case study for post-discharge outreach triage. The pipeline starts with synthetic encounter and communication data, derives text and structured features, trains a readmission-risk model, and carries the artifact through a Google Cloud deployment path with online scoring and drift reporting.
+
+Instead of stopping at a notebook, the repo treats the model as one part of a broader system: data preparation, feature generation, service deployment, and monitoring. The emphasis is on engineering judgment for healthcare-adjacent workflows rather than on a single benchmark number.
 
 ## Why This Matters
 
-Many healthcare ML demos stop at a notebook or a single model artifact. This repo focuses on the broader engineering problem: how messy post-discharge communication can be normalized, enriched, joined with structured encounter data, and carried through a cloud deployment path that is realistic for production-adjacent work.
+Outreach prioritization sits at the intersection of noisy documentation, operational constraints, and model risk. This repo shows how structured clinical signals and free-text interactions can be combined in a reproducible cloud workflow without overstating what a synthetic-data prototype can prove.
 
 ## Overview
 
